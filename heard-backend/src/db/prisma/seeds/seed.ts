@@ -4,8 +4,13 @@ import { transactions } from './data';
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.transaction.createMany({
-    data: [...transactions],
+  transactions.forEach(async (transaction: any) => {
+    await prisma.transaction.create({
+      data: {
+        ...transaction,
+        transactionDate: new Date(transaction.transactionDate),
+      },
+    });
   });
 }
 
