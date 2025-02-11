@@ -20,7 +20,7 @@ model Transaction {
   amount          Float
   fromAccount     String   @map("from_account")
   toAccount       String   @map("to_account")
-  transactionDate DateTime @map("transaction_date")
+  transactionDate DateTime @default(now()) @map("transaction_date")
 
   @@map("transactions")
 }

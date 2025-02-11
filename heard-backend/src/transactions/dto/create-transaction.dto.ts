@@ -20,8 +20,4 @@ export class CreateTransactionDTO {
   @IsString()
   @IsNotEmpty()
   readonly toAccount: string;
-
-  @IsString()
-  @IsNotEmpty()
-  readonly transactionDate: string;
 }
