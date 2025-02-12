@@ -92,6 +92,11 @@ const TransactionForm = ({ transaction }: TransactionFormProps) => {
             </p>
           ))}
       </div>
+      {state.message && (
+        <p className="mt-2 text-sm font-extrabold text-yellow-500" key={state.message}>
+          {state.message}
+        </p>
+      )}
 
       <div className="flex mt-8 items-center justify-end gap-2">
         <Link className="px-8 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400" href="/">

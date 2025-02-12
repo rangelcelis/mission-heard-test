@@ -32,12 +32,20 @@ const FormSchema = z.object({
 
 export async function findAll(): Promise<Transaction[]> {
   const data = await fetch(`${process.env.URL_API}/transactions`);
-  return await data.json();
+  const { transactions } = await data.json();
+
+  return transactions || [];
 }
 
 export async function getTransaction(id: number): Promise<Transaction> {
   const data = await fetch(`${process.env.URL_API}/transactions/${id}`);
-  return await data.json();
+  const { transaction } = await data.json();
+
+  if (transaction) {
+    return transaction;
+  }
+
+  redirect('/');
 }
 
 export async function create(prevState: FormState, formData: FormData) {
@@ -49,18 +57,23 @@ export async function create(prevState: FormState, formData: FormData) {
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
-      message: 'Missing Fields. Failed to Create Transaction.',
+      message: 'Failed to Create Transaction.',
     };
   }
 
   try {
-    await fetch(`${process.env.URL_API}/transactions`, {
+    const data = await fetch(`${process.env.URL_API}/transactions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(validatedFields.data),
     });
+    const { id } = await data.json();
+
+    if (!id) {
+      throw new Error('Invalid Transaction');
+    }
   } catch (error) {
     console.error(error);
     return {
@@ -86,13 +99,18 @@ export async function update(id: number, prevState: FormState, formData: FormDat
   }
 
   try {
-    await fetch(`${process.env.URL_API}/transactions/${id}`, {
+    const data = await fetch(`${process.env.URL_API}/transactions/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(validatedFields.data),
     });
+    const { success } = await data.json();
+
+    if (!success) {
+      throw new Error('Failed to Update Transaction');
+    }
   } catch (error) {
     console.error(error);
     return {
@@ -105,9 +123,22 @@ export async function update(id: number, prevState: FormState, formData: FormDat
 }
 
 export async function remove(id: number) {
-  await fetch(`${process.env.URL_API}/transactions/${id}`, {
-    method: 'DELETE',
-  });
+  try {
+    const data = await fetch(`${process.env.URL_API}/transactions/${id}`, {
+      method: 'DELETE',
+    });
+
+    const { success } = await data.json();
+
+    if (!success) {
+      throw new Error('Failed to Remove Transaction');
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      message: 'Failed to Remove Transaction.',
+    };
+  }
 
   revalidatePath('/');
 }

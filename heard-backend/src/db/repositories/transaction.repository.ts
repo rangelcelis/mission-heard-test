@@ -8,28 +8,69 @@ export class TransactionRepository {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
+  async findAll(): Promise<any[]> {
     this.logger.debug('Getting all transactions');
-    return await this.prisma.transaction.findMany();
+
+    try {
+      return await this.prisma.transaction.findMany();
+    } catch (error) {
+      this.logger.error(error);
+      throw new Error('Failed to get all transactions');
+    }
   }
 
-  async getById(id: number) {
+  async getById(id: number): Promise<any> {
     this.logger.debug(`Getting transaction by ID: ${id}`);
-    return await this.prisma.transaction.findFirst({ where: { id } });
+
+    try {
+      return await this.prisma.transaction.findFirst({ where: { id } });
+    } catch (error) {
+      this.logger.error(error);
+      throw new Error('Failed to get transaction');
+    }
   }
 
-  async create(data: Prisma.TransactionCreateInput) {
+  async create(data: Prisma.TransactionCreateInput): Promise<number> {
     this.logger.debug('Creating a new transaction');
-    return await this.prisma.transaction.create({ data });
+
+    try {
+      const { id } = await this.prisma.transaction.create({ data });
+      return id;
+    } catch (error) {
+      this.logger.error(error);
+      throw new Error('Failed to create transaction');
+    }
   }
 
-  async update(id: number, data: Prisma.TransactionUpdateInput) {
+  async update(
+    id: number,
+    data: Prisma.TransactionUpdateInput,
+  ): Promise<boolean> {
     this.logger.debug(`Updating transaction by ID: ${id}`);
-    return await this.prisma.transaction.update({ where: { id }, data });
+
+    try {
+      const transaction = await this.prisma.transaction.update({
+        where: { id },
+        data,
+      });
+      return transaction !== null;
+    } catch (error) {
+      this.logger.error(error);
+      throw new Error('Failed to update transaction');
+    }
   }
 
-  async delete(id: number) {
+  async delete(id: number): Promise<boolean> {
     this.logger.debug(`Deleting transaction by ID: ${id}`);
-    return await this.prisma.transaction.delete({ where: { id } });
+
+    try {
+      const transaction = await this.prisma.transaction.delete({
+        where: { id },
+      });
+      return transaction !== null;
+    } catch (error) {
+      this.logger.error(error);
+      throw new Error('Failed to delete transaction');
+    }
   }
 }

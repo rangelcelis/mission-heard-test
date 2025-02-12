@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Patch,
   Post,
@@ -16,27 +17,28 @@ export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
 
   @Post()
-  create(@Body() body: CreateTransactionDTO) {
-    return this.transactionsService.create(body);
+  @HttpCode(201)
+  async create(@Body() body: CreateTransactionDTO) {
+    return await this.transactionsService.create(body);
   }
 
   @Get()
-  findAll() {
-    return this.transactionsService.findAll();
+  async findAll() {
+    return await this.transactionsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.transactionsService.findOne(id);
+  async findOne(@Param('id') id: number) {
+    return await this.transactionsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() body: UpdateTransactionDTO) {
-    return this.transactionsService.update(id, body);
+  async update(@Param('id') id: number, @Body() body: UpdateTransactionDTO) {
+    return await this.transactionsService.update(id, body);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.transactionsService.remove(id);
+  async remove(@Param('id') id: number) {
+    return await this.transactionsService.remove(id);
   }
 }

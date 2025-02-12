@@ -19,9 +19,17 @@ const TransactionsTable = ({ transactions }: TransactionsTableProps) => {
         </tr>
       </thead>
       <tbody>
-        {transactions.map((transaction: any) => (
-          <TransactionRow key={transaction.id} transaction={transaction} />
-        ))}
+        {transactions.length === 0 ? (
+          <tr>
+            <td colSpan={6} className="text-center text-xl">
+              No transactions found
+            </td>
+          </tr>
+        ) : (
+          transactions.map((transaction: any) => (
+            <TransactionRow key={transaction.id} transaction={transaction} />
+          ))
+        )}
       </tbody>
     </table>
   );
