@@ -18,6 +18,11 @@ select {
   @apply mt-1 block w-full px-3 py-2 border  border-gray-500 rounded-md shadow-sm text-gray-700;
 }
 
+td,
+th {
+  @apply px-4;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

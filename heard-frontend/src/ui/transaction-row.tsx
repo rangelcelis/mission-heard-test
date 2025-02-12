@@ -2,6 +2,7 @@
 
 import { remove } from '@/app/actions';
 import { Transaction } from '@/types/transaction.type';
+import { formatAmount } from '@/utils/format-amount';
 import { useRouter } from 'next/navigation';
 
 type TransactionRowProps = {
@@ -20,17 +21,23 @@ const TransactionRow = ({ transaction }: TransactionRowProps) => {
   };
 
   return (
-    <tr>
+    <tr className="border">
       <td>{transaction.title}</td>
       <td>{transaction.description}</td>
-      <td>{transaction.amount}</td>
+      <td className="flex justify-end">{formatAmount(transaction.amount)}</td>
       <td>{transaction.fromAccount}</td>
       <td>{transaction.toAccount}</td>
-      <td className="flex gap-2 p-2">
-        <button className="border px-8 py-2" onClick={() => handleEditClick(transaction.id!)}>
+      <td className="flex gap-2 p-2 justify-center">
+        <button
+          className="px-8 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700"
+          onClick={() => handleEditClick(transaction.id!)}
+        >
           Edit
         </button>
-        <button className="border px-8 py-2" onClick={() => handleRemoveClick(transaction.id!)}>
+        <button
+          className="px-8 py-2 bg-red-500 text-white rounded-md hover:bg-red-700"
+          onClick={() => handleRemoveClick(transaction.id!)}
+        >
           Remove
         </button>
       </td>

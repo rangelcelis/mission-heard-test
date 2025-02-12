@@ -6,7 +6,7 @@ export default async function Edit({ params }: { params: Promise<{ id: number }>
   const transaction = await getTransaction(id);
 
   return (
-    <section className="grid w-full h-full gap-8">
+    <section className="grid w-full h-full gap-8 justify-center">
       <h1 className="text-4xl text-center">Transaction #{id}</h1>
 
       <TransactionForm transaction={transaction} />

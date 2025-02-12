@@ -1,6 +1,7 @@
 'use client';
 
-import { create, State, update } from '@/app/actions';
+import { create, update } from '@/app/actions';
+import { FormState } from '@/types/form-state.type';
 import { Transaction } from '@/types/transaction.type';
 import Link from 'next/link';
 import { useActionState } from 'react';
@@ -10,12 +11,12 @@ type TransactionFormProps = {
 };
 
 const TransactionForm = ({ transaction }: TransactionFormProps) => {
-  const initialState: State = { message: null, errors: {} };
+  const initialState: FormState = { message: null, errors: {} };
   const action = transaction ? update.bind(null, transaction.id!) : create;
   const [state, formAction, pending] = useActionState(action, initialState);
 
   return (
-    <form action={formAction} className="w-1/4">
+    <form action={formAction}>
       <div className="mb-4">
         <label className="block text-sm font-medium">Title</label>
         <input
@@ -24,6 +25,12 @@ const TransactionForm = ({ transaction }: TransactionFormProps) => {
           name="title"
           defaultValue={transaction?.title}
         />
+        {state.errors?.title &&
+          state.errors.title.map((error: string) => (
+            <p className="mt-2 text-sm text-red-500" key={error}>
+              {error}
+            </p>
+          ))}
       </div>
       <div className="mb-4">
         <label className="block text-sm font-medium">Description</label>
@@ -33,6 +40,12 @@ const TransactionForm = ({ transaction }: TransactionFormProps) => {
           name="description"
           defaultValue={transaction?.description}
         ></textarea>
+        {state.errors?.description &&
+          state.errors.description.map((error: string) => (
+            <p className="mt-2 text-sm text-red-500" key={error}>
+              {error}
+            </p>
+          ))}
       </div>
       <div className="mb-4">
         <label className="block text-sm font-medium">Amount</label>
@@ -42,6 +55,12 @@ const TransactionForm = ({ transaction }: TransactionFormProps) => {
           name="amount"
           defaultValue={transaction?.amount}
         />
+        {state.errors?.amount &&
+          state.errors.amount.map((error: string) => (
+            <p className="mt-2 text-sm text-red-500" key={error}>
+              {error}
+            </p>
+          ))}
       </div>
       <div className="mb-4">
         <label className="block text-sm font-medium">From Account</label>
@@ -51,6 +70,12 @@ const TransactionForm = ({ transaction }: TransactionFormProps) => {
           name="fromAccount"
           defaultValue={transaction?.fromAccount}
         />
+        {state.errors?.fromAccount &&
+          state.errors.fromAccount.map((error: string) => (
+            <p className="mt-2 text-sm text-red-500" key={error}>
+              {error}
+            </p>
+          ))}
       </div>
       <div className="mb-4">
         <label className="block text-sm font-medium">To Account</label>
@@ -60,17 +85,22 @@ const TransactionForm = ({ transaction }: TransactionFormProps) => {
           name="toAccount"
           defaultValue={transaction?.toAccount}
         />
+        {state.errors?.toAccount &&
+          state.errors.toAccount.map((error: string) => (
+            <p className="mt-2 text-sm text-red-500" key={error}>
+              {error}
+            </p>
+          ))}
       </div>
 
-      <hr className="my-4" />
-      <div className="flex items-center justify-end gap-2">
+      <div className="flex mt-8 items-center justify-end gap-2">
         <Link className="px-8 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400" href="/">
           Close
         </Link>
         <button
-          className="px-8 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700"
           type="submit"
           disabled={pending}
+          className="px-8 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700"
         >
           {transaction ? 'Update' : 'Create'}
         </button>

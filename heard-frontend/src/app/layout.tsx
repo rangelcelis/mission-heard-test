@@ -25,19 +25,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased py-12 max-w-screen-xl min-h-dvh m-auto`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased py-12 max-w-screen-xl min-h-dvh mx-auto`}
       >
         {children}
-        <footer className="flex items-center justify-center p-4">
-          <a
-            className="flex items-center hover:underline hover:underline-offset-4"
-            href="https://github.com/rangelcelis"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Develop by: @rangelcelis
-          </a>
-        </footer>
       </body>
     </html>
   );

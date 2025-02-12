@@ -1,28 +1,34 @@
 'use server';
 
+import { FormState } from '@/types/form-state.type';
 import { Transaction } from '@/types/transaction.type';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 const FormSchema = z.object({
-  title: z.string(),
-  description: z.string(),
-  amount: z.coerce.number().gt(0, { message: 'Enter an amount greater than $0.' }),
-  fromAccount: z.string(),
-  toAccount: z.string(),
+  title: z
+    .string({
+      invalid_type_error: 'Invalid title',
+    })
+    .nonempty('Please enter a title.'),
+  description: z
+    .string({
+      invalid_type_error: 'Invalid description',
+    })
+    .nonempty('Please enter a description'),
+  amount: z.coerce.number().gt(0, 'Amount must be greater than zero ($0)'),
+  fromAccount: z
+    .string({
+      invalid_type_error: 'Invalid fromAccount',
+    })
+    .nonempty('Please enter a fromAccount'),
+  toAccount: z
+    .string({
+      invalid_type_error: 'Invalid toAccount',
+    })
+    .nonempty('Please enter a toAccount'),
 });
-
-export type State = {
-  errors?: {
-    title?: string[];
-    description?: string[];
-    amount?: string[];
-    fromAccount?: string[];
-    toAccount?: string[];
-  };
-  message?: string | null;
-};
 
 export async function findAll(): Promise<Transaction[]> {
   const data = await fetch(`${process.env.URL_API}/transactions`);
@@ -34,7 +40,7 @@ export async function getTransaction(id: number): Promise<Transaction> {
   return await data.json();
 }
 
-export async function create(prevState: State, formData: FormData) {
+export async function create(prevState: FormState, formData: FormData) {
   const values = Object.fromEntries(formData.entries());
   const validatedFields = FormSchema.safeParse({
     ...values,
@@ -62,10 +68,11 @@ export async function create(prevState: State, formData: FormData) {
     };
   }
 
+  revalidatePath('/');
   redirect('/');
 }
 
-export async function update(id: number, prevState: State, formData: FormData) {
+export async function update(id: number, prevState: FormState, formData: FormData) {
   const values = Object.fromEntries(formData.entries());
   const validatedFields = FormSchema.safeParse({
     ...values,
@@ -93,6 +100,7 @@ export async function update(id: number, prevState: State, formData: FormData) {
     };
   }
 
+  revalidatePath('/');
   redirect('/');
 }
 
