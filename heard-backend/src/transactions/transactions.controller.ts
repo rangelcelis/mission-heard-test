@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -19,26 +20,36 @@ export class TransactionsController {
   @Post()
   @HttpCode(201)
   async create(@Body() body: CreateTransactionDTO) {
-    return await this.transactionsService.create(body);
+    const id = await this.transactionsService.create(body);
+    return { id };
   }
 
   @Get()
   async findAll() {
-    return await this.transactionsService.findAll();
+    const transactions = await this.transactionsService.findAll();
+    return { transactions };
   }
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    return await this.transactionsService.findOne(id);
+    const transaction = await this.transactionsService.findOne(id);
+
+    if (!transaction) {
+      throw new NotFoundException(`Transaction with id ${id} not found.`);
+    }
+
+    return { transaction };
   }
 
   @Patch(':id')
   async update(@Param('id') id: number, @Body() body: UpdateTransactionDTO) {
-    return await this.transactionsService.update(id, body);
+    const idUpdated = await this.transactionsService.update(id, body);
+    return { id: idUpdated, updated: true };
   }
 
   @Delete(':id')
   async remove(@Param('id') id: number) {
-    return await this.transactionsService.remove(id);
+    const idRemoved = await this.transactionsService.remove(id);
+    return { id: idRemoved, removed: true };
   }
 }
