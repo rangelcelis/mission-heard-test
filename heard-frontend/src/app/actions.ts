@@ -106,9 +106,9 @@ export async function update(id: number, prevState: FormState, formData: FormDat
       },
       body: JSON.stringify(validatedFields.data),
     });
-    const { success } = await data.json();
+    const response = await data.json();
 
-    if (!success) {
+    if (!response.id) {
       throw new Error('Failed to Update Transaction');
     }
   } catch (error) {
@@ -127,10 +127,9 @@ export async function remove(id: number) {
     const data = await fetch(`${process.env.URL_API}/transactions/${id}`, {
       method: 'DELETE',
     });
+    const response = await data.json();
 
-    const { success } = await data.json();
-
-    if (!success) {
+    if (!response.id) {
       throw new Error('Failed to Remove Transaction');
     }
   } catch (error) {
