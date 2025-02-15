@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
-import { transactionsMock as transactions } from '../../../test/mock/transactions';
+import { transactionsPrisma } from '../../../test/mocks/transactions';
 import { PrismaService } from '../prisma/prisma.service';
 import { TransactionRepository } from './transaction.repository';
 
@@ -81,10 +81,10 @@ describe('TransactionRepository', () => {
   });
 
   it('should get all transactions', async () => {
-    prisma.transaction.findMany.mockResolvedValue(transactions);
+    prisma.transaction.findMany.mockResolvedValue(transactionsPrisma);
 
     const result = await repository.findAll();
-    expect(result).toStrictEqual(transactions);
+    expect(result).toStrictEqual(transactionsPrisma);
   });
 
   it('should throw an error when Prisma fails getting all transactions', async () => {

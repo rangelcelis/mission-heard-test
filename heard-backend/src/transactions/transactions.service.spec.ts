@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import { TransactionRepository } from '../../src/db/repositories/transaction.repository';
-import { transactionsMock } from '../../test/mock/transactions';
+import { transactionsPrisma } from '../../test/mocks/transactions';
 import { TransactionsService } from './transactions.service';
 
 describe('TransactionsService', () => {
@@ -25,7 +25,7 @@ describe('TransactionsService', () => {
   });
 
   it('create', async () => {
-    const transaction = transactionsMock[0];
+    const transaction = transactionsPrisma[0];
     repository.create.mockResolvedValue(1);
 
     const result = await service.create(transaction);
@@ -33,15 +33,15 @@ describe('TransactionsService', () => {
   });
 
   it('findAll', async () => {
-    repository.findAll.mockResolvedValue(transactionsMock);
+    repository.findAll.mockResolvedValue(transactionsPrisma);
 
     const result = await service.findAll();
-    expect(result).toStrictEqual(transactionsMock);
+    expect(result).toStrictEqual(transactionsPrisma);
     expect(result).toHaveLength(5);
   });
 
   it('findOne', async () => {
-    const transaction = transactionsMock[0];
+    const transaction = transactionsPrisma[0];
     repository.getById.mockResolvedValue(transaction);
 
     const result = await service.findOne(transaction.id);
@@ -49,7 +49,7 @@ describe('TransactionsService', () => {
   });
 
   it('update', async () => {
-    const transaction = transactionsMock[1];
+    const transaction = transactionsPrisma[1];
     repository.updateOne.mockResolvedValue(transaction.id);
 
     const result = await service.update(transaction.id, { title: 'New title' });
@@ -57,7 +57,7 @@ describe('TransactionsService', () => {
   });
 
   it('remove', async () => {
-    const transaction = transactionsMock[2];
+    const transaction = transactionsPrisma[2];
     repository.deleteOne.mockResolvedValue(3);
 
     const result = await service.remove(transaction.id);

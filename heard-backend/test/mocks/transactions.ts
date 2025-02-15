@@ -1,4 +1,4 @@
-export const transactionsMock = [
+export const transactionsPrisma = [
   {
     id: 1,
     title: 'transaction_1',
@@ -19,7 +19,6 @@ export const transactionsMock = [
   },
   {
     id: 3,
-
     title: 'transaction_3',
     description: 'Transaction 3',
     amount: 44139,
@@ -46,3 +45,10 @@ export const transactionsMock = [
     transactionDate: new Date('2023-04-21'),
   },
 ];
+
+export const transactionsHttp = transactionsPrisma.map((trx) => {
+  return {
+    ...trx,
+    transactionDate: trx.transactionDate.toISOString(),
+  };
+});

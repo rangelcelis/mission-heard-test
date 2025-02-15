@@ -1,13 +1,13 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
-import { transactionsMock } from '../../test/mock/transactions';
+import { transactionsPrisma } from '../../test/mocks/transactions';
 import { CreateTransactionDTO } from './dto/create-transaction.dto';
 import { UpdateTransactionDTO } from './dto/update-transaction.dto';
 import { TransactionsController } from './transactions.controller';
 import { TransactionsService } from './transactions.service';
 
-const oneTransactionMock = transactionsMock[0];
+const oneTransactionMock = transactionsPrisma[0];
 
 describe('TransactionsController', () => {
   let controller: TransactionsController;
@@ -40,10 +40,10 @@ describe('TransactionsController', () => {
   });
 
   it('should get all Transactions', async () => {
-    service.findAll.mockResolvedValue(transactionsMock);
+    service.findAll.mockResolvedValue(transactionsPrisma);
 
     const result = await controller.findAll();
-    expect(result).toStrictEqual({ transactions: transactionsMock });
+    expect(result).toStrictEqual({ transactions: transactionsPrisma });
   });
 
   it('should get a single Transaction', async () => {
